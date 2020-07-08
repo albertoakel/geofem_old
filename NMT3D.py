@@ -15,39 +15,6 @@ import sys
 from colorama import Fore, Back, Style 
 from discretize.utils import mkvc, refine_tree_xyz
 
-def easymodelbox(M,S,B):
-    n_box=len(B)/7
-    for i in range(0,int(n_box),1):
-        x=B[0+int(i*7)]
-        Lx=B[1+int(i*7)]
-        y=B[2+int(i*7)]
-        Ly=B[3+int(i*7)]
-        z=B[4+int(i*7)]
-        Lz=B[5+int(i*7)]
-        aim_cond=B[6+int(i*7)]
-        S[(M.gridCC[:,0]  < x+Lx) & (M.gridCC[:,0]  > x) & (M.gridCC[:,1]  < y+Ly) & (M.gridCC[:,1]  > y) & (M.gridCC[:,2]  < z+Lz) & (M.gridCC[:,2]  > z) ]  =  aim_cond
-    return
-
-def easymodellayer(M,S,thi,cond):
-    # while True:
-    #     if len(cond)!=len(thi):
-    #         print()
-    #         print(Fore.RED +'++++ERRO NA DIMENSÃO DAS CONDUTIVIDADES X ESPESSURAS++++')
-    #         sys.exit() 
-    #         break
-    #     else:
-    n_layers=len(thi)
-    S[M.gridCC[:,2] >= 0] =   1e-12  #cond. ar
-    c=0
-    for i in range(0,n_layers,1):
-        c=0+c
-        S[(M.gridCC[:,2]  < -c) & (M.gridCC[:,2]  >= -thi[i])]=cond[i]
-        c=thi[i]
-    #define limite do grid igual a camada anterior    
-    S[(M.gridCC[:,2]  < -c) & (M.gridCC[:,2]  >= -M.gridCC[-1,2])]=cond[i]
-    return
-
-
 def MT3D(input_var):
     
     dx=input_var['dxdydz'][0]
@@ -117,11 +84,11 @@ def MT3D(input_var):
         pass
     
 
-    mesh1d = simpeg.Mesh.TensorMesh([M.hz], np.array([M.x0[2]]))
+#    mesh1d = simpeg.Mesh.TensorMesh([M.hz], np.array([M.x0[2]]))
 #    sigBG1d = np.zeros(mesh1d.nC) + conds[1]
 
    
-    fig,axes = plt.subplots(num=2,clear=True)
+    fig,axes = plt.subplots(num=1,clear=True)
     M.plotSlice(np.log(sig), grid=True, normal='y',ax=axes)
 # #    plt.ylim(-6000,2000)
 # #    plt.colorbar(sig)
@@ -130,3 +97,38 @@ def MT3D(input_var):
     
 
     return M,sig
+
+
+#função para criar os box
+def easymodelbox(M,S,B):
+    n_box=len(B)/7
+    for i in range(0,int(n_box),1):
+        x=B[0+int(i*7)]
+        Lx=B[1+int(i*7)]
+        y=B[2+int(i*7)]
+        Ly=B[3+int(i*7)]
+        z=B[4+int(i*7)]
+        Lz=B[5+int(i*7)]
+        aim_cond=B[6+int(i*7)]
+        S[(M.gridCC[:,0]  < x+Lx) & (M.gridCC[:,0]  > x) & (M.gridCC[:,1]  < y+Ly) & (M.gridCC[:,1]  > y) & (M.gridCC[:,2]  < z+Lz) & (M.gridCC[:,2]  > z) ]  =  aim_cond
+    return
+
+#função para criar as camadas
+def easymodellayer(M,S,thi,cond):
+    # while True:
+    #     if len(cond)!=len(thi):
+    #         print()
+    #         print(Fore.RED +'++++ERRO NA DIMENSÃO DAS CONDUTIVIDADES X ESPESSURAS++++')
+    #         sys.exit() 
+    #         break
+    #     else:
+    n_layers=len(thi)
+    S[M.gridCC[:,2] >= 0] =   1e-12  #cond. ar
+    c=0
+    for i in range(0,n_layers,1):
+        c=0+c
+        S[(M.gridCC[:,2]  < -c) & (M.gridCC[:,2]  >= -thi[i])]=cond[i]
+        c=thi[i]
+    #define limite do grid igual a camada anterior    
+    S[(M.gridCC[:,2]  < -c) & (M.gridCC[:,2]  >= -M.gridCC[-1,2])]=cond[i]
+    return
