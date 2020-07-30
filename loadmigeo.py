@@ -4,6 +4,20 @@
 Created on Mon Jun  1 19:56:12 2020
 
 @author: akel
+Leitura dos arquivos de input 
+input --> arquivo com as instruções do modelo geologico e caracteristicas
+          da simulação. Todas as instruções são identificadas com um label
+          seguidos ":" com a informação. Por exemplo, para o método geofísico,
+          temos duas opções MT3D e MCSEM. Assim a instrução no arquivo fica.
+          metodo: MT3D
+          
+           
+
+          
+
+        
+    
+
 """
 
 import numpy as np
@@ -62,14 +76,16 @@ def inputfiles(filename):
                 tmp_box=np.array(temp.split(","),dtype=float)
                 box = np.concatenate((box,tmp_box))
             out['box']=box
-            #out={'dxdydz' :dx,dy,dz}
+           
         #infomeshgrid
 
         #infomodelMT1D    
         elif st.lower()==str('thi'):
             thi=np.array(temp.split(","),dtype=float)
+            out['thi']=thi
         elif st.lower()==str('res'):
             res=np.array(temp.split(","),dtype=float)
+            out['res']=res
         else:
             nome = None
             print("Label",st, "invalido")
@@ -83,4 +99,3 @@ def inputfiles(filename):
 # if __name__ == "__main__":
 #     import sys
 #     print(input_1(str(sys.argv[1])))
-    
