@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Sun Sep  8 17:43:22 2019
+Created on Fri Jul 29 16:08:07 2020
 
-@author: ellen
+@author: akel
 """
-
 from SimPEG import Mesh, Utils
 from discretize.utils import mkvc, refine_tree_xyz
 import numpy as np
