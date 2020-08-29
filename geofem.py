@@ -17,6 +17,7 @@ import vtk
 
 import numpy as np
 import matplotlib.pyplot as plt
+
 plt.style.use('ggplot')
 
 plt.close('all')
@@ -25,47 +26,37 @@ print('Running geofem test')
 
 #plt.close('all')
 
-##usando o spyder! 
-out=load.inputfiles('MT3D_input_ex0.in') #função
+##usando o spyder! (decomentar para usar)
+out=load.inputfiles('MT3D_input_ex3.in') #função
 
-
-#usando o terminal!
+#usando o terminal!(decomentar para usar.)
 #parser = argparse.ArgumentParser()
 #parser.add_argument("inp", help="input file",type=str)
 #ARG = parser.parse_args()
 #out=load.inputfiles(ARG.inp)
-#print(out['box'])
 
 
-#opt ---> tensor ou octree
-#se não declarado opt info o código roda tensor mesh.
-Me,cond=model.MT3D(out,opt='octree') #run octree mesh
+#se não declarado opt=='tensor' o código execultar mesh octree
+Me,cond=model.modelmesh(out,level=1) #run octree mesh
 
-
+#informações da malha em tela
 print("\n the mesh has {} cells".format(Me))
 print("\n the mesh has {} cells".format(Me.nC))
 
 
 #plot matplotlib
 fig,a1 = plt.subplots(num=1,clear=True)
+pcoloropts = {"cmap":"spring"}
 fig.canvas.set_window_title('Slice Y')
-Me.plotSlice(np.log(cond), grid=True, normal='y',ax=a1)
+cb=Me.plotSlice(np.log10(cond), grid=True, normal='y',ax=a1)
+fig.colorbar(cb[0],ax=a1)
 
+#
 fig,a2 = plt.subplots(num=2,clear=True)
 fig.canvas.set_window_title('Slice X')
-Me.plotSlice(np.log(cond), grid=True, normal='x',ax=a2)
+cb2=Me.plotSlice(np.log10(cond), grid=True, normal='x',ax=a2)
+fig.colorbar(cb2[0],ax=a2)
 
 
-
-#plot pyvista
-#models = {'res': np.log(cond)}
-#dataset = Me.toVTK(models)
-#p = pv.Plotter(notebook=0)
-#p.show_grid(location='outer')
-#
-#p.add_mesh(dataset.slice('x'), opacity=0.75, name='x-slice')
-#p.add_mesh(dataset.slice('y'), opacity=0.75, name='y-slice')
-#p.add_mesh(dataset.slice('z'), opacity=0.75, name='z-slice')
-#p.show()
-
-
+# vizualizar via pyvista
+model.pyvista_view(out)

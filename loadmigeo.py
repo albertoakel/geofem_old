@@ -11,12 +11,6 @@ input --> arquivo com as instruções do modelo geologico e caracteristicas
           temos duas opções MT3D e MCSEM. Assim a instrução no arquivo fica.
           metodo: MT3D
           
-           
-
-          
-
-        
-    
 
 """
 
